@@ -51,12 +51,12 @@ class Test:
     addr, size = address_of_buffer(self._map)
     assert size == sizeof(LinkedMem)
     self._lm = LinkedMem.from_address(addr)
-    self._lm.uiTick = 0
+    self._lm.uiTick = 1
   
   def set(self):
     
-    name_str = 'test'
-    self._lm.name = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in name_str[:len(name_str)]])
+    # name_str = 'test'
+    # self._lm.name = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in name_str[:len(name_str)]])
      
     desc_str = "TestLink is a test of the Link plugin."
     self._lm.description = (c_wchar_p * 2048)(*[c_wchar_p(ord(c)) for c in desc_str[:len(desc_str)]])

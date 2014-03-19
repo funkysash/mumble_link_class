@@ -15,7 +15,7 @@ class LinkedMem(Structure):
               ("fAvatarPosition", c_float * 3),
               ("fAvatarFront", c_float * 3),
               ("fAvatarTop", c_float * 3),
-              ("name", c_wchar_p * 256),
+              ("name", c_wchar * 256),
               ("fCameraPosition", c_float * 3),
               ("fCameraFront", c_float * 3),
               ("fCameraTop", c_float * 3),
@@ -55,8 +55,16 @@ class Test:
   
   def set(self):
     
-    name_str = 'test'
-    self._lm.name = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in name_str[:len(name_str)]])
+    
+    name_str = "test"
+    name_wchar = create_unicode_buffer(255)
+    for i in range(0,len(name_str)):
+      name_wchar[i] = c_wchar(name_str[i])
+    
+    self._lm.name = u'ABCD'
+    
+    #print self._lm.name[0]
+    #self._lm.name = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in name_str[:len(name_str)]])
      
     desc_str = "TestLink is a test of the Link plugin."
     self._lm.description = (c_wchar_p * 2048)(*[c_wchar_p(ord(c)) for c in desc_str[:len(desc_str)]])

@@ -103,9 +103,9 @@ class Test:
 
   #  #Context should be equal for players which should be able to hear each other positional and
   #  #differ for those who shouldn't (e.g. it could contain the server+port and team)
-    #context_str = 'A'
+    context_str = 'A'
     #self._lm.context = (c_ubyte * 256)(*[c_ubyte(ord(c)) for c in context_str[:len(context_str)]])
-    self._lm.context = 'A'
+    self._lm.context[0] = ord('A')
     #print ''.join(map(chr, self._lm.context))
     self._lm.context_len = len(context_str);
 

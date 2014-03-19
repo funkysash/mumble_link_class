@@ -19,12 +19,12 @@ class LinkedMem(Structure):
               ("fCameraPosition", c_float * 3),
               ("fCameraFront", c_float * 3),
               ("fCameraTop", c_float * 3),
-              ("identity", c_wchar_p * 256),
+              ("identity", c_wchar * 256),
               #
               ("context_len", c_uint32),
               #
               ("context", c_ubyte * 256),
-              ("description", c_wchar_p * 2048)]
+              ("description", c_wchar * 2048)]
 
 
 class Test:
@@ -55,19 +55,9 @@ class Test:
   
   def set(self):
     
+    self._lm.name = u'Python Mumble Link Test'
     
-    name_str = "test"
-    name_wchar = create_unicode_buffer(255)
-    for i in range(0,len(name_str)):
-      name_wchar[i] = c_wchar(name_str[i])
-    
-    self._lm.name = u'ABCD'
-    
-    #print self._lm.name[0]
-    #self._lm.name = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in name_str[:len(name_str)]])
-     
-    desc_str = "TestLink is a test of the Link plugin."
-    self._lm.description = (c_wchar_p * 2048)(*[c_wchar_p(ord(c)) for c in desc_str[:len(desc_str)]])
+    self._lm.description = u'this is a test plugin'
     
     self._lm.uiVersion =  c_uint32(1);
       
@@ -109,8 +99,7 @@ class Test:
 
   #  #Identifier which uniquely identifies a certain player in a context (e.g. the ingame Name).
     #ident_str = 'A1'
-    ident_str = sys.argv[2]
-    self._lm.identity = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in ident_str[:len(ident_str)]])
+    self._lm.identity = sys.argv[2]
 
   #  #Context should be equal for players which should be able to hear each other positional and
   #  #differ for those who shouldn't (e.g. it could contain the server+port and team)

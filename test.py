@@ -1,6 +1,9 @@
 import lib.posix_ipc as pos
 import os
 import mmap
+import sys
+
+
 from ctypes import *
 from _multiprocessing import address_of_buffer
 
@@ -30,6 +33,10 @@ class Test:
   _lm = LinkedMem()
 
   def start(self):
+
+    print "x offset of camera and avatar: ",sys.argv[1]
+    print "identity: ",sys.argv[2]
+
     self.open()
     while True:
       self.set()
@@ -75,12 +82,12 @@ class Test:
     self._lm.fAvatarTop[2] = c_float(0.0);
 
   #  // Position of the avatar (here standing slightly off the origin)
-    self._lm.fAvatarPosition[0] = c_float(-80.1);
+    self._lm.fAvatarPosition[0] = c_float(float(sys.argv[1]));
     self._lm.fAvatarPosition[1] = c_float(0.0);
-    self._lm.fAvatarPosition[2] = c_float(0.1);
+    self._lm.fAvatarPosition[2] = c_float(0.0);
 
   #  // Same as avatar but for the camera.
-    self._lm.fCameraPosition[0] = c_float(0.0);
+    self._lm.fCameraPosition[0] = c_float(float(sys.argv[1]));
     self._lm.fCameraPosition[1] = c_float(0.0);
     self._lm.fCameraPosition[2] = c_float(0.0);
 
@@ -93,7 +100,8 @@ class Test:
     self._lm.fCameraTop[2] = c_float(0.0);
 
   #  #Identifier which uniquely identifies a certain player in a context (e.g. the ingame Name).
-    ident_str = 'A1'
+    #ident_str = 'A1'
+    ident_str = sys.argv[2]
     self._lm.identity = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in ident_str[:len(ident_str)]])
 
   #  #Context should be equal for players which should be able to hear each other positional and

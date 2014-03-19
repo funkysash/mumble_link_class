@@ -57,6 +57,7 @@ class Test:
     
     # name_str = 'test'
     # self._lm.name = (c_wchar_p * 256)(*[c_wchar_p(ord(c)) for c in name_str[:len(name_str)]])
+    self._lm.name[0] = c_wchar_p(ord('\0'))
      
     desc_str = "TestLink is a test of the Link plugin."
     self._lm.description = (c_wchar_p * 2048)(*[c_wchar_p(ord(c)) for c in desc_str[:len(desc_str)]])

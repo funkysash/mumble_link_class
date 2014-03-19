@@ -1,4 +1,4 @@
-import posix_ipc as pos
+import lib.posix_ipc as pos
 import os
 import mmap
 from ctypes import *

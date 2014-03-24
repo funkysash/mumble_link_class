@@ -24,7 +24,10 @@ HOSTS=$(grep '<hostname' "$1" | cut -f2 -d ">" | cut -f1 -d "<")
 HOSTS="$(echo "$HOSTS"| sort | uniq | tr "\n" " ")"
 
 #start murmur (PositionalAudioLink Server)
-$MURMUR_PATH/murmur.x86 &
+cd $MURMUR_PATH;
+./murmur.x86 -ini murmur.ini &
+cd $DIR;
+#$MURMUR_PATH/murmur.x86 &
 
 # iterate over hosts and start clients
 for host in $HOSTS; do

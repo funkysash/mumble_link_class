@@ -19,6 +19,13 @@ from _multiprocessing import address_of_buffer
 SHORTNAME = u'PositionalAudioLink'
 DESCRIPTION = u'This is a Link between avango.gua and the Mumble Link plugin'
 
+
+class ShmError(Exception):
+  def __init__(self, value):
+    self.value = value
+  def __str__(self):
+    return repr(self.value)
+
 class LinkedMem(Structure):
   _fields_ = [("uiVersion", c_uint32), #1 or 2; 1 ignores camera, identity and context
               ("uiTick", c_uint32),  #counter to check for updated information
@@ -66,12 +73,18 @@ class PositionalAudioLink(avango.script.Script):
     #open shared memory
     _name = "/MumbleLink." + str(os.getuid()) #name of shared memory
     #TODO: next line crashes if mumble isn't running. Maybe add Error output
-    _mem = pos.SharedMemory(_name, flags=0, size=sizeof(LinkedMem))   #flag 0 means access
-    print _mem.name
-    self._map = mmap.mmap(_mem.fd, _mem.size)
-    _mem.close_fd()
-    addr, size = address_of_buffer(self._map)
-    assert size == sizeof(LinkedMem)
+    try:
+      _mem = pos.SharedMemory(_name, flags=0, size=sizeof(LinkedMem))   #flag 0 means access
+      print _mem.name
+      self._map = mmap.mmap(_mem.fd, _mem.size)
+      _mem.close_fd()
+      addr, size = address_of_buffer(self._map)
+      assert size == sizeof(LinkedMem)
+    
+    except:
+      #print "Error while opening shared memory. Propably Mumble is not running !"
+      raise ShmError('Error while opening shared memory. Propably Mumble is not running !')
+
     self._lm = LinkedMem.from_address(addr)
     self._lm.uiTick = 1 #start with a number other than 0 so the first updated isn't skipped'''
     
